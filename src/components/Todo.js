@@ -28,8 +28,19 @@ const Todo = props => {
              }).catch(error =>{
                  console.log(error);
              })
+             return ()=>{
+                 console.log('First');
+             }
     }, []); //daca e empty array e ComponentDidMount daca e vreun state se rerendeaza la acel state 
-
+    const mouseMoveHandler = event =>{
+        console.log(event.clientX, event.clientY);
+    }
+    // useEffect(()=>{
+    //     document.addEventListener('mousemove',mouseMoveHandler);
+    //     return ()=>{
+    //         document.removeEventListener('mousemove',mouseMoveHandler);
+    //     };
+    // },[]);
     const inputChangeHandler = (event) =>{
         // setTodoState({
         //     userInput:event.target.value,
@@ -66,9 +77,8 @@ const Todo = props => {
             type="button" 
             onClick={todoAddHandler}> Add
         </button>
-        <ul >
-            
-            {todoList.map((todo,id) =>
+        <ul >  
+            {todoList.map(todo =>
                  <li key={todo.id}>{todo.name}</li>         
             )}
         </ul>
