@@ -1,37 +1,31 @@
-import React , { useState , useEffect } from 'react';
+import React , { useState , useEffect ,useMemo } from 'react';
 import axios from 'axios';
 
 const Todo = props => {
     const [ userInput, setUserInput] =  useState('');
-    const [ todoList, setTodoList ] = useState([]); //cica e de recomandat sa ai state separate
-
-    // const [todoState ,setTodoState ] = useState({
-    //     userInput:' ',
-    //     todoList:[]
-    // })
+    const [ todoList, setTodoList ] = useState([]); //e de recomandat sa ai state separate
 
     useEffect( ()=>{
-        axios.get('https://react-hooks-e3510.firebaseio.com/todos.json')
-             .then(result =>{
-                 console.log(result.data);
+            axios.get('https://react-hooks-e3510.firebaseio.com/todos.json')
+            .then(result =>{
                 const todoData = result.data;
                 const todos = [];
-                for(const key in todoData){
+                for(let key in todoData){
                     todos.push({
                         id:key,
                         name:todoData[key].name
-                    })
-                }
+                       })}
                 
                 setTodoList(todos);   
-
-             }).catch(error =>{
-                 console.log(error);
-             })
+               
+            }).catch(error =>{
+                console.log(error);
+            });
              return ()=>{
-                 console.log('First');
+               console.log('CleanUp');
+                
              }
-    }, []); //daca e empty array e ComponentDidMount daca e vreun state se rerendeaza la acel state 
+    }, []); 
     const mouseMoveHandler = event =>{
         console.log(event.clientX, event.clientY);
     }
@@ -41,48 +35,46 @@ const Todo = props => {
     //         document.removeEventListener('mousemove',mouseMoveHandler);
     //     };
     // },[]);
+
     const inputChangeHandler = (event) =>{
-        // setTodoState({
-        //     userInput:event.target.value,
-        //     todoList:todoState.todoList,
-        // });
+       
         setUserInput(event.target.value);
     };
 
     const todoAddHandler = () =>{
-        // setTodoState({
-        //     userInput: todoState.userInput,
-        //     todoList: todoState.todoList.concat(todoState.userInput),
-        // });
-        setTodoList(todoList.concat(userInput)); //e mai clean asa
+      
+       
         axios.post('https://react-hooks-e3510.firebaseio.com/todos.json',{name:userInput})
             .then(res =>{
-                console.log(res);
+                const dataItem ={
+                    id:res.data.name,
+                    name:userInput,
+                }
+               setTodoList(todoList.concat(dataItem))
+               console.log(dataItem.name);
             }).catch(error =>{
                 console.log(error);
             })
     };
-    
-    
+   
+    const todoLists = todoList.map( todo => <li  key={todo.id} style={{display:'flex'}}>{todo.name}</li>)
+
     return ( 
      <React.Fragment>
         <input 
             type="text" 
             placeholder="Todo" 
             onChange={inputChangeHandler} 
-            value={todoList[todoList.length -1 ] !== userInput  ? userInput : ' '} 
+            value={(todoList.name ) !== userInput  ? userInput : ' '} 
         />
-        
         <button 
             type="button" 
             onClick={todoAddHandler}> Add
         </button>
         <ul >  
-            {todoList.map(todo =>
-                 <li key={todo.id}>{todo.name}</li>         
-            )}
+            {todoLists}
         </ul>
-    </React.Fragment>
+    </React.Fragment>   
     );
 
 };
