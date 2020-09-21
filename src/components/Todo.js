@@ -42,8 +42,6 @@ const Todo = props => {
     };
 
     const todoAddHandler = () =>{
-      
-       
         axios.post('https://react-hooks-e3510.firebaseio.com/todos.json',{name:userInput})
             .then(res =>{
                 const dataItem ={
@@ -51,13 +49,19 @@ const Todo = props => {
                     name:userInput,
                 }
                setTodoList(todoList.concat(dataItem))
-               console.log(dataItem.name);
+              
             }).catch(error =>{
                 console.log(error);
             })
     };
-   
-    const todoLists = todoList.map( todo => <li  key={todo.id} style={{display:'flex'}}>{todo.name}</li>)
+ 
+    const todoLists = todoList
+                        .map( (todo , index) => {          
+                                return (  
+                                <li key={todo.id} style={{display:'flex'}}>
+                                    {todo.name}
+                                </li>  
+                             )})
 
     return ( 
      <React.Fragment>
@@ -71,6 +75,7 @@ const Todo = props => {
             type="button" 
             onClick={todoAddHandler}> Add
         </button>
+        
         <ul >  
             {todoLists}
         </ul>
