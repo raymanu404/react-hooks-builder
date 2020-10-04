@@ -5,7 +5,7 @@ import Auth from './components/Auth';
 import Header from './components/Header';
 import AuthContext from './auth-context';
 
-const App= ( props ) => {
+const App = ( props ) => {
   const [page,setPage] = useState('auth');
   const [authStatus,setAuthStatus] = useState(false);
 
